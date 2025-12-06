@@ -1,10 +1,10 @@
 import yaml
 import json
 import os
-from openai import OpenAI
-from blueprint_parser import BlueprintParser
+from openai import OpenAI, AsyncOpenAI
+from .blueprint_parser import BlueprintParser
 import configparser
-from llm_cost_tracker import CostTracker
+from .llm_cost_tracker import CostTracker
 
 class PersonaGenerator:
     def __init__(self, project_path: str):
@@ -18,6 +18,10 @@ class PersonaGenerator:
             api_key = api_key.strip('"').strip("'")
         
         self.client = OpenAI(
+            base_url="https://openrouter.ai/api/v1",
+            api_key=api_key,
+        )
+        self.async_client = AsyncOpenAI(
             base_url="https://openrouter.ai/api/v1",
             api_key=api_key,
         )
@@ -71,6 +75,35 @@ class PersonaGenerator:
         )
         
         if response.usage:
+            CostTracker().add_usage(self.model, response.usage.prompt_tokens, response.usage.completion_tokens)
+        
+        return response.choices[0].message.content
+
+    async def async_flesh_out_persona(self, skeleton: dict):
+        """
+        Async version: Uses the LLM to generate the narrative "flesh" for the persona.
+        """
+        system_prompt = (
+            "You are a creative writer. I will give you a skeleton of a person with raw data points. "
+            "You must breathe life into them. Connect the dots. "
+            "If they are 'Angry' and 'Broke', invent a scenario explaining why. "
+            "Assign a 'skepticism' attribute to the persona on a scale of 0 to 100 based on their personality. "
+            "Return the result as a Markdown file with YAML frontmatter containing the skeleton data and the new skepticism attribute."
+        )
+        
+        user_prompt = f"Here is the skeleton:\n{json.dumps(skeleton, indent=2)}\n\nGenerate the full persona profile."
+
+        response = await self.async_client.chat.completions.create(
+            model=self.model,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt}
+            ]
+        )
+        
+        if response.usage:
+            # CostTracker is thread safe with locks, safe to call from async loop 
+            # (as long as it doesn't block significantly, but simple addition is fine)
             CostTracker().add_usage(self.model, response.usage.prompt_tokens, response.usage.completion_tokens)
         
         return response.choices[0].message.content

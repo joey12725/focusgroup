@@ -1,10 +1,10 @@
 import unittest
 from unittest.mock import MagicMock, patch
 import json
-from analyst import Analyst
+from vibetest.analyst import Analyst
 
 class TestAnalyst(unittest.TestCase):
-    @patch('analyst.OpenAI')
+    @patch('vibetest.analyst.OpenAI')
     def test_analyze_results(self, mock_openai):
         # Setup mock
         mock_client = MagicMock()
@@ -16,15 +16,15 @@ class TestAnalyst(unittest.TestCase):
         analyst = Analyst("dummy_path")
         session_data = {
             "question": "Q",
-            "results": [{"response": "A", "status": "success"}]
+            "results": [{"response": "A", "status": "success", "persona": "p1.md"}]
         }
         
         report = analyst.analyze_results(session_data)
         self.assertEqual(report, "Analysis Report")
 
-    @patch('analyst.os.listdir')
-    @patch('analyst.open')
-    @patch('analyst.os.path.exists')
+    @patch('vibetest.analyst.os.listdir')
+    @patch('vibetest.analyst.open')
+    @patch('vibetest.analyst.os.path.exists')
     def test_load_session(self, mock_exists, mock_open, mock_listdir):
         mock_exists.return_value = True
         mock_listdir.return_value = ["session_1.json"]

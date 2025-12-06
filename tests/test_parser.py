@@ -1,4 +1,4 @@
-from blueprint_parser import BlueprintParser
+from vibetest.blueprint_parser import BlueprintParser
 
 def test_parser():
     parser = BlueprintParser()

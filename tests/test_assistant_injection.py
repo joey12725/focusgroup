@@ -2,7 +2,7 @@
 import unittest
 from unittest.mock import MagicMock, patch, AsyncMock
 import asyncio
-from simulation import Simulation
+from vibetest.simulation import Simulation
 
 class TestAssistantInjection(unittest.TestCase):
     def setUp(self):

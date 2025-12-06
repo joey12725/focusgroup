@@ -1,7 +1,7 @@
 import os
 import yaml
 import subprocess
-from persona_generator import PersonaGenerator
+from vibetest.persona_generator import PersonaGenerator
 
 def test_integration():
     print("--- Testing PersonaGenerator Skeleton Generation ---")

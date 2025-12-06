@@ -1,7 +1,7 @@
 import os
 import json
 import configparser
-from llm_cost_tracker import CostTracker
+from .llm_cost_tracker import CostTracker
 from openai import OpenAI
 from rich.console import Console
 from rich.table import Table

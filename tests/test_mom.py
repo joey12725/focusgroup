@@ -1,5 +1,5 @@
 import unittest
-from mom_test import MomTest
+from vibetest.mom_test import MomTest
 
 class TestMomTest(unittest.TestCase):
     def test_rewrite_question(self):

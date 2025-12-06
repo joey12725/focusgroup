@@ -5,7 +5,7 @@ import asyncio
 import datetime
 import configparser
 from openai import AsyncOpenAI
-from llm_cost_tracker import CostTracker
+from .llm_cost_tracker import CostTracker
 
 class Simulation:
     def __init__(self, project_path: str):

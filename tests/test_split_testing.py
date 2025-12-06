@@ -2,8 +2,8 @@ import unittest
 from unittest.mock import MagicMock, AsyncMock, patch
 import asyncio
 import os
-from simulation import Simulation
-from analyst import Analyst
+from vibetest.simulation import Simulation
+from vibetest.analyst import Analyst
 
 class TestSplitTesting(unittest.TestCase):
     def setUp(self):
@@ -11,8 +11,8 @@ class TestSplitTesting(unittest.TestCase):
         self.sim = Simulation(self.project_path)
         self.analyst = Analyst(self.project_path)
 
-    @patch('simulation.Simulation.load_random_personas')
-    @patch('simulation.Simulation.conduct_interview')
+    @patch('vibetest.simulation.Simulation.load_random_personas')
+    @patch('vibetest.simulation.Simulation.conduct_interview')
     def test_run_simulation_split_testing(self, mock_conduct, mock_load):
         # Setup mocks
         mock_load.return_value = [
@@ -22,7 +22,7 @@ class TestSplitTesting(unittest.TestCase):
             {"filename": "p4.md", "content": "Persona 4"}
         ]
         
-        mock_conduct.side_effect = lambda p, q, d, v: asyncio.sleep(0) # Mock coroutine
+        mock_conduct.side_effect = lambda *args, **kwargs: asyncio.sleep(0) # Mock coroutine
         
         # Run simulation with options
         options = ["$10", "$20"]

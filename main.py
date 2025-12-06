@@ -6,14 +6,17 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 from rich.markdown import Markdown
-from architect import Architect
-from persona_generator import PersonaGenerator
-from simulation import Simulation
-from analyst import Analyst
-from mom_test import MomTest
-from llm_cost_tracker import CostTracker
+from vibetest.architect import Architect
+from vibetest.persona_generator import PersonaGenerator
+from vibetest.simulation import Simulation
+from vibetest.analyst import Analyst
+from vibetest.mom_test import MomTest
+from vibetest.llm_cost_tracker import CostTracker
 import asyncio
 import yaml
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = typer.Typer(help="VibeTest: AI-Powered Persona Simulation Tool")
 console = Console()
@@ -71,29 +74,43 @@ def generate(project: str, count: int = 50):
         console.print(f"[bold red]Error:[/bold red] blueprint.yaml not found in {project_path}!")
         return
 
-    with Progress(
-        SpinnerColumn(),
-        TextColumn("[progress.description]{task.description}"),
-        BarColumn(),
-        TaskProgressColumn(),
-        TimeRemainingColumn(),
-        console=console,
-        transient=True
-    ) as progress:
-        task = progress.add_task(f"[cyan]Forging {count} personas...", total=count)
-        
-        for i in range(count):
+    async def generate_single_persona(index: int, semaphore: asyncio.Semaphore, progress, task_id):
+        async with semaphore:
             # 1. Generate Skeleton (Math)
             skeleton = generator.generate_skeleton(blueprint)
             
             # 2. Flesh out (LLM)
-            persona_content = generator.flesh_out_persona(skeleton)
+            persona_content = await generator.async_flesh_out_persona(skeleton)
             
             # 3. Save
-            filename = f"p_{i+1:03d}.md"
+            filename = f"p_{index+1:03d}.md"
             generator.save_persona(persona_content, filename)
             
-            progress.advance(task)
+            progress.advance(task_id)
+
+    async def run_generation():
+        # Limit concurrency to 10 to avoid hitting rate limits too hard
+        semaphore = asyncio.Semaphore(10)
+        
+        with Progress(
+            SpinnerColumn(),
+            TextColumn("[progress.description]{task.description}"),
+            BarColumn(),
+            TaskProgressColumn(),
+            TimeRemainingColumn(),
+            console=console,
+            transient=True
+        ) as progress:
+            task = progress.add_task(f"[cyan]Forging {count} personas (Parallel)...", total=count)
+            
+            tasks = []
+            for i in range(count):
+                tasks.append(generate_single_persona(i, semaphore, progress, task))
+            
+            await asyncio.gather(*tasks)
+
+    # Run the async generation
+    asyncio.run(run_generation())
             
     console.print(Panel(f"[bold green]✓ Successfully generated {count} personas[/bold green]\nLocation: {project_path}/personas", title="Complete", border_style="green"))
     

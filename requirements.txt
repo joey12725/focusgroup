@@ -3,3 +3,4 @@ typer
 openai
 pyyaml
 numpy
+python-dotenv
