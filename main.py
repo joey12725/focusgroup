@@ -14,9 +14,6 @@ from vibetest.mom_test import MomTest
 from vibetest.llm_cost_tracker import CostTracker
 import asyncio
 import yaml
-from dotenv import load_dotenv
-
-load_dotenv()
 
 app = typer.Typer(help="VibeTest: AI-Powered Persona Simulation Tool")
 console = Console()
@@ -74,48 +71,34 @@ def generate(project: str, count: int = 50):
         console.print(f"[bold red]Error:[/bold red] blueprint.yaml not found in {project_path}!")
         return
 
-    async def generate_single_persona(index: int, semaphore: asyncio.Semaphore, progress, task_id):
-        async with semaphore:
+    with Progress(
+        SpinnerColumn(),
+        TextColumn("[progress.description]{task.description}"),
+        BarColumn(),
+        TaskProgressColumn(),
+        TimeRemainingColumn(),
+        console=console,
+        transient=True
+    ) as progress:
+        task = progress.add_task(f"[cyan]Forging {count} personas...", total=count)
+        
+        for i in range(count):
             # 1. Generate Skeleton (Math)
             skeleton = generator.generate_skeleton(blueprint)
             
             # 2. Flesh out (LLM)
-            persona_content = await generator.async_flesh_out_persona(skeleton)
+            persona_content = generator.flesh_out_persona(skeleton)
             
             # 3. Save
-            filename = f"p_{index+1:03d}.md"
+            filename = f"p_{i+1:03d}.md"
             generator.save_persona(persona_content, filename)
             
-            progress.advance(task_id)
-
-    async def run_generation():
-        # Limit concurrency to 10 to avoid hitting rate limits too hard
-        semaphore = asyncio.Semaphore(10)
-        
-        with Progress(
-            SpinnerColumn(),
-            TextColumn("[progress.description]{task.description}"),
-            BarColumn(),
-            TaskProgressColumn(),
-            TimeRemainingColumn(),
-            console=console,
-            transient=True
-        ) as progress:
-            task = progress.add_task(f"[cyan]Forging {count} personas (Parallel)...", total=count)
-            
-            tasks = []
-            for i in range(count):
-                tasks.append(generate_single_persona(i, semaphore, progress, task))
-            
-            await asyncio.gather(*tasks)
-
-    # Run the async generation
-    asyncio.run(run_generation())
+            progress.advance(task)
             
     console.print(Panel(f"[bold green]✓ Successfully generated {count} personas[/bold green]\nLocation: {project_path}/personas", title="Complete", border_style="green"))
     
     cost = CostTracker().get_total_cost()
-    console.print(Panel(f"Total Cost: [bold green]${cost:.2f}[/bold green]", title="Cost", border_style="green"))
+    console.print(Panel(f"Total Cost: [bold green]${cost:.4f}[/bold green]", title="Cost", border_style="green"))
 
 @app.command()
 def ask(
@@ -256,11 +239,11 @@ def ask(
             
     # Save session
     filepath = sim.save_session(question, results)
-
+    filepath = sim.save_session(question, results)
     console.print(f"\n[dim]Session saved to: {filepath}[/dim]")
 
     cost = CostTracker().get_total_cost()
-    console.print(Panel(f"Total Cost: [bold green]${cost:.2f}[/bold green]", title="Cost", border_style="green"))
+    console.print(Panel(f"Total Cost: [bold green]${cost:.4f}[/bold green]", title="Cost", border_style="green"))
 
 @app.command()
 def batch_ask(
@@ -345,7 +328,7 @@ def batch_ask(
     console.print(Panel(f"[bold green]✓ Batch Simulation Complete[/bold green]\n\nSaved to: {filepath}", title="Success", border_style="green"))
     
     cost = CostTracker().get_total_cost()
-    console.print(Panel(f"Total Cost: [bold green]${cost:.2f}[/bold green]", title="Cost", border_style="green"))
+    console.print(Panel(f"Total Cost: [bold green]${cost:.4f}[/bold green]", title="Cost", border_style="green"))
 
 
 @app.command()
@@ -380,7 +363,7 @@ def analyze(
         console.print(f"\n[dim]Report saved to: {filepath}[/dim]")
     
     cost = CostTracker().get_total_cost()
-    console.print(Panel(f"Total Cost: [bold green]${cost:.2f}[/bold green]", title="Cost", border_style="green"))
+    console.print(Panel(f"Total Cost: [bold green]${cost:.4f}[/bold green]", title="Cost", border_style="green"))
 
 if __name__ == "__main__":
     app()
