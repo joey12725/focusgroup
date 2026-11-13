@@ -10,7 +10,7 @@
   <img src="docs/assets/demo.svg" alt="focusgroup ask: eight personas split-testing two price points for a plant sensor" width="100%">
 </p>
 
-Eight people, two price points, four model families, one command. The run above is the bundled [`examples/fernando`](examples/fernando) project: a made-up soil sensor that texts you in your plant's voice.
+Eight people, two price points, four model families, one command. The run above is the bundled [`examples/fernando`](examples/fernando) project: a made-up soil sensor that texts you in your plant's voice. The example's answers were written by hand to show the output format; run it with your own key to get a live panel.
 
 ## Why it's fun
 
