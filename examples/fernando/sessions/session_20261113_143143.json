@@ -1,0 +1,212 @@
+{
+  "type": "single",
+  "timestamp": "20261113_143143",
+  "question": "Fernando is a soil sensor that texts you, in your plant's voice, when it needs water or light. It costs ***. Would you buy one? Be honest.",
+  "options": [
+    "$49 once",
+    "$29 plus $3 a month"
+  ],
+  "depth": 1,
+  "results": [
+    {
+      "persona": "p_004.md",
+      "persona_name": "Theo Lindqvist (p_004)",
+      "model": "openai/gpt-5-mini",
+      "variant": "$49 once",
+      "status": "success",
+      "conversation": [
+        {
+          "role": "interviewer",
+          "content": "Fernando is a soil sensor that texts you, in your plant's voice, when it needs water or light. It costs $49 once. Would you buy one? Be honest."
+        },
+        {
+          "role": "persona",
+          "content": "Forty-nine bucks is a week of groceries for me, so not alone. But if my roommates split it? Probably yes. We're all killing the same pothos."
+        },
+        {
+          "role": "interviewer",
+          "content": "Have you split the cost of something for the apartment before? How did that go?"
+        },
+        {
+          "role": "persona",
+          "content": "Yeah, we Venmo'd for an air fryer in September. Took three weeks to collect, but we did it. A plant that roasts us in the group chat would sell itself to them."
+        }
+      ]
+    },
+    {
+      "persona": "p_005.md",
+      "persona_name": "Renee Abbott (p_005)",
+      "model": "deepseek/deepseek-chat-v3-0324",
+      "variant": "$29 plus $3 a month",
+      "status": "success",
+      "conversation": [
+        {
+          "role": "interviewer",
+          "content": "Fernando is a soil sensor that texts you, in your plant's voice, when it needs water or light. It costs $29 plus $3 a month. Would you buy one? Be honest."
+        },
+        {
+          "role": "persona",
+          "content": "I'd think about it as a gift, but three dollars a month means I'm gifting someone a bill. That feels rude."
+        },
+        {
+          "role": "interviewer",
+          "content": "Who would you be buying it for?"
+        },
+        {
+          "role": "persona",
+          "content": "My sister. She kills a plant a season. I'd happily pay fifty up front so she never sees a charge from me in her statement."
+        }
+      ]
+    },
+    {
+      "persona": "p_007.md",
+      "persona_name": "Lena Ostrowski (p_007)",
+      "model": "google/gemini-2.5-flash",
+      "variant": "$49 once",
+      "status": "success",
+      "conversation": [
+        {
+          "role": "interviewer",
+          "content": "Fernando is a soil sensor that texts you, in your plant's voice, when it needs water or light. It costs $49 once. Would you buy one? Be honest."
+        },
+        {
+          "role": "persona",
+          "content": "Honestly? Yes. Maybe two. My roommate is my watering system and she's moving out in June. A plant that texts me in a dramatic voice is exactly how my brain works."
+        },
+        {
+          "role": "interviewer",
+          "content": "What would make you pick this over setting phone reminders?"
+        },
+        {
+          "role": "persona",
+          "content": "Reminders are me nagging me, and I ignore me. If the monstera texts 'I am PARCHED, Lena' I'll laugh and actually go water it."
+        }
+      ]
+    },
+    {
+      "persona": "p_002.md",
+      "persona_name": "Gordon Pike (p_002)",
+      "model": "anthropic/claude-haiku-4.5",
+      "variant": "$29 plus $3 a month",
+      "status": "success",
+      "conversation": [
+        {
+          "role": "interviewer",
+          "content": "Fernando is a soil sensor that texts you, in your plant's voice, when it needs water or light. It costs $29 plus $3 a month. Would you buy one? Be honest."
+        },
+        {
+          "role": "persona",
+          "content": "No. Three dollars a month to get texted by a plant? I water them on Sunday. Done."
+        },
+        {
+          "role": "interviewer",
+          "content": "What do you do today when one of the plants looks unhappy?"
+        },
+        {
+          "role": "persona",
+          "content": "Give it more water. If it dies, my wife buys another one for twelve bucks. That's cheaper than a year of your subscription."
+        }
+      ]
+    },
+    {
+      "persona": "p_003.md",
+      "persona_name": "Priya Raman (p_003)",
+      "model": "anthropic/claude-haiku-4.5",
+      "variant": "$49 once",
+      "status": "success",
+      "conversation": [
+        {
+          "role": "interviewer",
+          "content": "Fernando is a soil sensor that texts you, in your plant's voice, when it needs water or light. It costs $49 once. Would you buy one? Be honest."
+        },
+        {
+          "role": "persona",
+          "content": "Maybe one, for the calathea, which is the only plant that beats my system. Forty-nine is fine for hardware. Is the data exportable?"
+        },
+        {
+          "role": "interviewer",
+          "content": "What would it have to do that your self-watering pots don't already?"
+        },
+        {
+          "role": "persona",
+          "content": "Light and humidity. The pots handle water. If it told me the calathea's corner drops below 40% humidity, that's worth fifty dollars. The jokes are optional."
+        }
+      ]
+    },
+    {
+      "persona": "p_008.md",
+      "persona_name": "Walt Hennessy (p_008)",
+      "model": "deepseek/deepseek-chat-v3-0324",
+      "variant": "$29 plus $3 a month",
+      "status": "success",
+      "conversation": [
+        {
+          "role": "interviewer",
+          "content": "Fernando is a soil sensor that texts you, in your plant's voice, when it needs water or light. It costs $29 plus $3 a month. Would you buy one? Be honest."
+        },
+        {
+          "role": "persona",
+          "content": "No. Stick your finger in the dirt. That's the sensor, and it's free."
+        },
+        {
+          "role": "interviewer",
+          "content": "Have you ever bought anything like this for someone else?"
+        },
+        {
+          "role": "persona",
+          "content": "For the grandkids, maybe. They kill every violet I give them. But not with a monthly fee. I'm not paying for my grandson's plant until he's thirty."
+        }
+      ]
+    },
+    {
+      "persona": "p_006.md",
+      "persona_name": "Marcus Bell (p_006)",
+      "model": "deepseek/deepseek-chat-v3-0324",
+      "variant": "$49 once",
+      "status": "success",
+      "conversation": [
+        {
+          "role": "interviewer",
+          "content": "Fernando is a soil sensor that texts you, in your plant's voice, when it needs water or light. It costs $49 once. Would you buy one? Be honest."
+        },
+        {
+          "role": "persona",
+          "content": "Forty-nine dollars is less than my third peace lily cost. So, possibly. If I can turn the jokes off."
+        },
+        {
+          "role": "interviewer",
+          "content": "When you're traveling for work, how do the plants get watered now?"
+        },
+        {
+          "role": "persona",
+          "content": "They don't. That's the whole problem. If it texted me the night before a trip, 'water me before you go,' that would actually save the plant."
+        }
+      ]
+    },
+    {
+      "persona": "p_001.md",
+      "persona_name": "Maya Castellanos (p_001)",
+      "model": "deepseek/deepseek-chat-v3-0324",
+      "variant": "$29 plus $3 a month",
+      "status": "success",
+      "conversation": [
+        {
+          "role": "interviewer",
+          "content": "Fernando is a soil sensor that texts you, in your plant's voice, when it needs water or light. It costs $29 plus $3 a month. Would you buy one? Be honest."
+        },
+        {
+          "role": "persona",
+          "content": "Instantly yes. Twenty-nine is impulse range for me. I'd probably keep the three dollars going for a while, as long as the texts stay funny."
+        },
+        {
+          "role": "interviewer",
+          "content": "What happened with the plant you lost most recently?"
+        },
+        {
+          "role": "persona",
+          "content": "Gerald. Fiddle leaf fig. I had an alarm for him and swiped it away for two weeks during a launch at work. He dropped every leaf in one weekend. I'm still not over it."
+        }
+      ]
+    }
+  ]
+}

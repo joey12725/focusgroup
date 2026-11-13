@@ -1,62 +1,112 @@
-# Usage Guide
+# Command reference
 
-This guide covers all available commands in the VibeTest CLI.
-
-## `init`
-Initialize a new project and generate a blueprint.
+Every command takes a project name (looked up in `--projects-dir`, default `./projects`) or a path to a project folder.
 
 ```bash
-python main.py init [PROJECT_NAME] --desc "[DESCRIPTION]"
+focusgroup [--projects-dir DIR] [--config FILE] COMMAND ...
 ```
-*   **Arguments**:
-    *   `PROJECT_NAME`: The name of the folder to create in `projects/`.
-    *   `--desc`: A detailed description of your product or idea. The more detail, the better the Architect can design the blueprint.
 
-## `generate`
-Generate a batch of personas based on the project's blueprint.
+## `init`: design the crowd
 
 ```bash
-python main.py generate [PROJECT_NAME] --count [NUMBER]
+focusgroup init fernando --brief brief.md
+focusgroup init fernando --desc "A soil sensor that texts you as your plant."
 ```
-*   **Arguments**:
-    *   `PROJECT_NAME`: The name of your project.
-    *   `--count`: The number of personas to generate (Default: 50).
 
-## `ask`
-Run a simulation by asking a question to your personas.
+The Architect reads the brief and writes `projects/fernando/blueprint.yaml`. Open it and adjust the odds before you generate anyone. Use `--force` to replace an existing blueprint.
+
+## `generate`: cast the personas
 
 ```bash
-python main.py ask "[QUESTION]" [PROJECT_NAME] [OPTIONS]
+focusgroup generate fernando --count 40 --seed 7
 ```
 
-### Options:
-*   `--sample [INT]`: Number of personas to interview (Default: 10).
-*   `--depth [INT]`: Number of follow-up questions to ask. `0` means a single Q&A turn. Higher numbers allow for back-and-forth conversation.
-*   `--mom`: Activates **The Mom Test** mode. Rewrites your question to be behavioral and unbiased.
-*   `--runs [INT]`: Run the simulation multiple times with reshuffled groups to gather more data.
-*   `--option [TEXT]`: Define variants for **Split Testing**. Requires `***` in your question text.
-    *   *Example*: `python main.py ask "Would you pay ***?" my_project --option "$10" --option "$50"`
+| Option | Default | |
+|---|---|---|
+| `--count, -n` | 20 | Personas to add. Numbering continues after existing ones. |
+| `--seed` | random | Makes the demographic mix reproducible. |
 
-## `batch_ask`
-Run multiple pre-defined tests sequentially from a YAML file.
+## `personas`: see who showed up
 
 ```bash
-python main.py batch_ask [PROJECT_NAME] [BATCH_FILE_PATH]
+focusgroup personas fernando
+focusgroup personas fernando --show Age --show Plants_Killed_Last_Year --show Current_Mood
 ```
-*   **Batch File Format**:
-    ```yaml
-    - question: "How do you solve X?"
-    - question: "Would you pay ***?"
-      options: ["$10", "$20"]
-    ```
 
-## `analyze`
-Analyze the results of an interview session.
+## `ask`: run interviews
 
 ```bash
-python main.py analyze [PROJECT_NAME] [OPTIONS]
+focusgroup ask fernando "Tell me about the last plant you lost." --sample 12 --depth 2
 ```
 
-### Options:
-*   `--session [SESSION_ID]`: The ID or filename of the session to analyze. Defaults to `latest`.
-*   `--save`: Saves the output report as a Markdown file in the project's `sessions/` folder.
+| Option | Default | |
+|---|---|---|
+| `--sample, -s` | 10 | Personas per run, drawn at random. |
+| `--depth` | 0 | Improvised follow-up questions after the scripted ones. |
+| `--mom` | off | Rewrite the question(s) with The Mom Test first. |
+| `--option, -o` | | Split-test variant. Repeat for each variant. Needs `***` in the question. |
+| `--runs` | 1 | Repeat with a fresh sample each time; all results go in one session. |
+| `--seed` | random | Seeds sampling and model assignment. |
+
+### Scripted sequences
+
+Separate questions with `|||` to ask them in order, then let `--depth` improvise:
+
+```bash
+focusgroup ask fernando "How do you water your plants today? ||| What did that cost you last year?" --depth 1
+```
+
+### Moderator-written questions
+
+`AGENT(...)` (or `ASSISTANT(...)`) hands one slot to a moderator model, which writes the question from your instruction and the conversation so far:
+
+```bash
+focusgroup ask fernando "What's the most annoying gadget you own? ||| AGENT(Ask whether a talking plant sensor would join that list, referencing their answer)"
+```
+
+### Split tests
+
+```bash
+focusgroup ask fernando "Fernando costs ***. Would you buy one?" \
+  --option '$49 once' --option '$29 plus $3 a month' --sample 20
+```
+
+Personas are dealt round-robin across variants from a random sample. Use single quotes around dollar signs so your shell leaves them alone.
+
+### The Mom Test
+
+```bash
+focusgroup ask fernando "Would you buy a smart plant sensor?" --mom
+```
+
+Rewrites the question into something like *"When did a plant of yours last die, and what was going on that week?"* before anyone hears it. The original and the rewrite are both printed.
+
+## `batch`: a whole interview guide
+
+```yaml
+# examples/fernando/batch.yaml
+- question: "Tell me about the last houseplant you lost. What happened?"
+
+- question: "Fernando costs ***. Would you buy one? Be honest."
+  options: ["$49 once", "$29 plus $3 a month"]
+
+- question:
+    - "How do you remember to water your plants today?"
+    - "AGENT(Based on their answer, ask what they would pay to never think about it again)"
+```
+
+```bash
+focusgroup batch fernando examples/fernando/batch.yaml --sample 8 --depth 1
+```
+
+Every test gets a fresh random sample. Results land in one `batch_<timestamp>.json`.
+
+## `analyze`: get the verdict
+
+```bash
+focusgroup analyze fernando              # newest session
+focusgroup analyze fernando --save       # also write reports/report_<timestamp>.md
+focusgroup analyze fernando --session session_20261113_143143
+```
+
+Prints the exact tally (interviews, exchanges, per-variant counts, models used), then the Analyst's report. See [architecture.md](architecture.md#5-aggregation-analystpy) for the rubrics.

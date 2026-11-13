@@ -1,0 +1,9 @@
+# Run with: focusgroup batch fernando examples/fernando/batch.yaml --sample 8
+- question: "Tell me about the last houseplant you lost. What happened?"
+
+- question: "Fernando costs ***. Would you buy one? Be honest."
+  options: ["$49 once", "$29 plus $3 a month"]
+
+- question:
+    - "How do you remember to water your plants today?"
+    - "AGENT(Based on their answer, ask what they would pay to never think about it again)"

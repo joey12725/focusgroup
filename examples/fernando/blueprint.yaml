@@ -1,0 +1,19 @@
+# --- WHO THEY ARE ---
+Age: "{{ normal(34, 10) }}"
+Income: "{{ normal(72000, 22000) }}"
+Household: "{{ weighted(Solo_Apartment:0.4, Roommates:0.2, Couple:0.25, Family_With_Kids:0.15) }}"
+Location_Type: "{{ choice(Big_City, Suburb, College_Town, Small_Town) }}"
+
+# --- THEIR PLANTS ---
+Plants_Owned: "{{ range(1, 45) }}"
+Plants_Killed_Last_Year: "{{ weighted(None:0.15, One_or_Two:0.4, Three_to_Five:0.3, Too_Many_To_Count:0.15) }}"
+Current_Watering_System: "{{ choice(Memory, Phone_Reminder, Sticky_Note, Roommate_Does_It, Self_Watering_Pots, Vibes) }}"
+
+# --- HOW THEY BUY ---
+Tech_Comfort: "{{ weighted(Gadget_Lover:0.3, Fine_With_It:0.5, Hates_Apps:0.2) }}"
+Subscription_Fatigue: "{{ weighted(Low:0.2, Medium:0.45, Severe:0.35) }}"
+Humor_Tolerance: "{{ choice(Loves_A_Bit, Mild_Chuckle, Finds_It_Annoying) }}"
+Buys_Gifts_Like_This: "{{ bool(0.35) }}"
+
+# --- LIFE RANDOMIZERS ---
+Current_Mood: "{{ choice(Optimistic, Stressed_About_Rent, Just_Repotted_Everything, Mourning_A_Fiddle_Leaf_Fig) }}"
