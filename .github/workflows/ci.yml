@@ -30,4 +30,4 @@ jobs:
       - run: pip install -e ".[dev]"
       - run: pytest
       - name: CLI smoke test
-        run: focusgroup --help && focusgroup personas fernando --projects-dir examples
+        run: focusgroup --help && focusgroup --projects-dir examples personas fernando
